@@ -39,6 +39,8 @@ public class UserModel {
 
     Date created;
 
+    String password;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     @ToString.Exclude

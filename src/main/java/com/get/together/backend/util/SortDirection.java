@@ -1,4 +1,4 @@
-package com.get.together.backend.data.util;
+package com.get.together.backend.util;
 
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;

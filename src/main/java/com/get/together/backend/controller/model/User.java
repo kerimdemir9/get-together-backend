@@ -19,4 +19,5 @@ public class User {
     String biography;
     String mail;
     Date created;
+    String password;
 }

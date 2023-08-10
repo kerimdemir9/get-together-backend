@@ -3,7 +3,7 @@ package com.get.together.backend.data.service;
 import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.repository.UserRepository;
 import com.get.together.backend.data.util.GenericPagedModel;
-import com.get.together.backend.data.util.SortDirection;
+import com.get.together.backend.util.SortDirection;
 import com.get.together.backend.data.validator.UserValidator;
 import lombok.val;
 import org.apache.commons.lang3.exception.ExceptionUtils;
