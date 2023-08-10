@@ -1,9 +1,9 @@
 drop database if exists get_together;
 
 create
-database get_together
-character set utf8mb4
-collate utf8mb4_0900_ai_ci;
+    database get_together
+    character set utf8mb4
+    collate utf8mb4_0900_ai_ci;
 use get_together;
 
 drop table if exists user;

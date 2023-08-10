@@ -8,6 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -24,8 +25,8 @@ import org.springframework.web.client.RestTemplate;
 @Testcontainers
 @Ignore
 public abstract class TestBase {
-
     public static final String LOCALHOST = "http://localhost:";
+    @Container
     private static final MySQLContainer container;
     private static final String IMAGE_VERSION = "mysql:8.0";
 
@@ -43,7 +44,7 @@ public abstract class TestBase {
         container = new MySQLContainer<>(IMAGE_VERSION)
                 .withUsername("test_user")
                 .withPassword("test_password")
-                .withInitScript("ddl.sql")
+                //.withInitScript("ddl.sql")
                 .withDatabaseName("get_together");
         container.start();
     }

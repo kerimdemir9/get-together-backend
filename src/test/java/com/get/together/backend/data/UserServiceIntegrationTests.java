@@ -5,7 +5,6 @@ import com.get.together.backend.TestBase;
 import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.util.GenericPagedModel;
 import com.get.together.backend.util.SortDirection;
-import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,29 +20,29 @@ public class UserServiceIntegrationTests extends TestBase {
     private static UserModel newUser2;
 
     public void insertNewUser() {
-        newUser = UserModel.builder()
+        newUser = userService.save(UserModel.builder()
                 .userName("user1")
-                .mail("mail1")
+                .mail("user@gmail.com")
                 .firstName("F1")
                 .lastName("L1")
                 .password("P1")
                 .biography("")
                 .phoneNumber("12345")
                 .created(new Date(Instant.now().toEpochMilli()))
-                .build();
+                .build());
     }
 
     public void insertNewUser2() {
-        newUser2 = UserModel.builder()
+        newUser2 = userService.save(UserModel.builder()
                 .userName("user2")
-                .mail("mail2")
+                .mail("user2@gmail.com")
                 .firstName("F2")
                 .lastName("L2")
                 .password("P2")
                 .biography("")
                 .phoneNumber("123456")
                 .created(new Date(Instant.now().toEpochMilli()))
-                .build();
+                .build());
     }
 
 
