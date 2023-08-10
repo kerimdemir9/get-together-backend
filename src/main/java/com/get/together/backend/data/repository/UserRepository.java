@@ -11,6 +11,7 @@ import java.util.Date;
 public interface UserRepository extends PagingAndSortingRepository<UserModel, Integer> {
     UserModel findById(Integer id);
     Boolean existsByUserName(String userName);
+    Boolean existsByMail(String mail);
     Page<UserModel> findAllByUserNameContainingIgnoreCase
             (String userName, Pageable pageable);
     Page<UserModel> findAllByFirstNameContainingIgnoreCase
@@ -24,4 +25,8 @@ public interface UserRepository extends PagingAndSortingRepository<UserModel, In
     Page<UserModel> findAllByPhoneNumberContaining(String phoneNUmber, Pageable pageable);
 
     UserModel save(UserModel userModel);
+
+    void delete(UserModel user);
+
+    void deleteAll();
 }

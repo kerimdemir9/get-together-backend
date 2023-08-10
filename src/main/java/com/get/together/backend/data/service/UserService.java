@@ -1,5 +1,6 @@
 package com.get.together.backend.data.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.repository.UserRepository;
 import com.get.together.backend.data.util.GenericPagedModel;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -43,7 +46,7 @@ public class UserService {
         }
     }
 
-    GenericPagedModel<UserModel> findAllByUserNameContainingIgnoreCase
+    public GenericPagedModel<UserModel> findAllByUserNameContainingIgnoreCase
             (String userName, int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
@@ -64,16 +67,150 @@ public class UserService {
         }
     }
 
+    public GenericPagedModel<UserModel> findAllByFirstNameContainingIgnoreCase
+            (String firstName, int page, int size, String sortBy, SortDirection sortDirection) {
+        try {
+            val result = sortDirection.equals(SortDirection.Ascending)
+                    ? userRepository.findAllByFirstNameContainingIgnoreCase(firstName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByFirstNameContainingIgnoreCase(firstName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+            if (result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with firstName: ".concat(firstName));
+            }
+
+            return GenericPagedModel.<UserModel>builder()
+                    .totalElements(result.getTotalElements())
+                    .numberOfElements(result.getNumberOfElements())
+                    .totalPages(result.getTotalPages())
+                    .content(result.getContent())
+                    .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public GenericPagedModel<UserModel> findAllByLastNameContainingIgnoreCase
+            (String lastName, int page, int size, String sortBy, SortDirection sortDirection) {
+        try {
+            val result = sortDirection.equals(SortDirection.Ascending)
+                    ? userRepository.findAllByLastNameContainingIgnoreCase(lastName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByLastNameContainingIgnoreCase(lastName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+            if (result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with lastName: ".concat(lastName));
+            }
+
+            return GenericPagedModel.<UserModel>builder()
+                    .totalElements(result.getTotalElements())
+                    .numberOfElements(result.getNumberOfElements())
+                    .totalPages(result.getTotalPages())
+                    .content(result.getContent())
+                    .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public GenericPagedModel<UserModel> findAllByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase
+            (String firstName, String lastName, int page, int size, String sortBy, SortDirection sortDirection) {
+        try {
+            val result = sortDirection.equals(SortDirection.Ascending)
+                    ? userRepository.findAllByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(firstName, lastName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(firstName, lastName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+            if (result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with firstName: ".concat(firstName)
+                        .concat(" and lastName: ").concat(lastName));
+            }
+
+            return GenericPagedModel.<UserModel>builder()
+                    .totalElements(result.getTotalElements())
+                    .numberOfElements(result.getNumberOfElements())
+                    .totalPages(result.getTotalPages())
+                    .content(result.getContent())
+                    .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public GenericPagedModel<UserModel> findAllByMailContainingIgnoreCase
+            (String mail, int page, int size, String sortBy, SortDirection sortDirection) {
+        try {
+            val result = sortDirection.equals(SortDirection.Ascending)
+                    ? userRepository.findAllByMailContainingIgnoreCase(mail, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByMailContainingIgnoreCase(mail, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+            if (result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with mail: ".concat(mail));
+            }
+
+            return GenericPagedModel.<UserModel>builder()
+                    .totalElements(result.getTotalElements())
+                    .numberOfElements(result.getNumberOfElements())
+                    .totalPages(result.getTotalPages())
+                    .content(result.getContent())
+                    .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public GenericPagedModel<UserModel> findAllByPhoneNumberContaining
+            (String phoneNumber, int page, int size, String sortBy, SortDirection sortDirection) {
+        try {
+            val result = sortDirection.equals(SortDirection.Ascending)
+                    ? userRepository.findAllByPhoneNumberContaining(phoneNumber, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByPhoneNumberContaining(phoneNumber, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+            if (result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with phoneNumber: ".concat(phoneNumber));
+            }
+
+            return GenericPagedModel.<UserModel>builder()
+                    .totalElements(result.getTotalElements())
+                    .numberOfElements(result.getNumberOfElements())
+                    .totalPages(result.getTotalPages())
+                    .content(result.getContent())
+                    .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
     public UserModel save(UserModel userModel) {
         try {
             userValidator.validate(userModel);
-            if(userRepository.existsByUserName(userModel.getUserName()) && Objects.isNull(userModel.getId())) {
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
-                        "UserName".concat(userModel.getUserName()).concat(" already in use"));
+            val userName = userRepository.existsByUserName(userModel.getUserName());
+            val mail = userRepository.existsByMail(userModel.getMail());
+            if((userName || mail) && Objects.isNull(userModel.getId())) {
+                String message = "";
+                if(userName) {
+                    message = "UserName: ".concat(userModel.getUserName()).concat(" already in use");
+                }
+                else if (mail) {
+                    message = "Mail: ".concat(userModel.getMail()).concat(" alread in use");
+                }
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, message);
             }
             return userRepository.save(userModel);
         } catch (final DataIntegrityViolationException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public UserModel hardDelete(Integer id) {
+        try {
+            val userToHardDelete = findById(id);
+
+            userRepository.delete(userToHardDelete);
+
+            return userToHardDelete;
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public void hardDeleteAll() {
+        try {
+            userRepository.deleteAll();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

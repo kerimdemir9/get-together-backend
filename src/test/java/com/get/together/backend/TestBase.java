@@ -1,5 +1,6 @@
 package com.get.together.backend;
 
+import com.get.together.backend.data.service.UserService;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,11 +35,9 @@ public abstract class TestBase {
     @Autowired
     public RestTemplate restTemplate;
 
-    /*
-    TODO: inject service classes here
     @Autowired
-    public ServiceClass serviceClass;
-     */
+    public UserService userService;
+
 
     static {
         container = new MySQLContainer<>(IMAGE_VERSION)
