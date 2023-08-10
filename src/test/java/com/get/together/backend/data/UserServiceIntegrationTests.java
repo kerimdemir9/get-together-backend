@@ -4,7 +4,10 @@ package com.get.together.backend.data;
 import com.get.together.backend.TestBase;
 import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.util.GenericPagedModel;
+import com.get.together.backend.util.SortDirection;
+import lombok.val;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.time.Instant;
 import java.util.Date;
@@ -61,4 +64,12 @@ public class UserServiceIntegrationTests extends TestBase {
         userService.hardDeleteAll();
     }
 
+    @Test
+    public void find_all_like_user_name_test() {
+        insertNewUser();
+        insertNewUser2();
+
+        testCollection(userService.findAllByUserNameContainingIgnoreCase
+                ("uSer", 0, 10, "id", SortDirection.Ascending));
+    }
 }
