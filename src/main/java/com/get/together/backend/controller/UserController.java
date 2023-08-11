@@ -140,6 +140,24 @@ public class UserController {
         log.info("Calling: saveUserV1 >> ".concat(user.toString()));
 
         val response = userService.save(UserModel.builder()
+                .userName(user.getUserName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .biography(user.getBiography())
+                .mail(user.getMail())
+                .created(new Date(Instant.now().toEpochMilli()))
+                .password(cryptographyUtil.encrypt(user.getPassword()))
+                .build());
+
+        return ResponseEntity.ok(mapUser(response));
+    }
+
+    @RequestMapping(value = "/v1/user/update", method = RequestMethod.POST)
+    private ResponseEntity<User> updateUserV1(@RequestBody User user) {
+        log.info("Calling: updateUserV1 >> ".concat(user.toString()));
+
+        val response = userService.save(UserModel.builder()
                 .id(user.getId())
                 .userName(user.getUserName())
                 .firstName(user.getFirstName())

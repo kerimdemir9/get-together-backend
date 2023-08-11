@@ -37,7 +37,6 @@ public class UserControllerIntegrationTests extends TestBase {
                 .password("P1")
                 .biography("")
                 .phoneNumber("12345")
-                .created(new Date(Instant.now().toEpochMilli()))
                 .build());
     }
 
@@ -50,7 +49,6 @@ public class UserControllerIntegrationTests extends TestBase {
                 .password("P2")
                 .biography("")
                 .phoneNumber("123456")
-                .created(new Date(Instant.now().toEpochMilli()))
                 .build());
     }
 
@@ -92,8 +90,11 @@ public class UserControllerIntegrationTests extends TestBase {
 
     @Test
     public void find_by_id_with_exception_test() {
+            val url = TestBase.LOCALHOST
+                    .concat(String.valueOf(port))
+                    .concat("/v1/user/1");
         try {
-            userService.findById(newUser.getId() + 1);
+            restTemplate.getForEntity(url, User.class);
         } catch (final HttpClientErrorException e) {
             assertThat(e.getMessage(), containsString("404"));
         }
@@ -133,14 +134,16 @@ public class UserControllerIntegrationTests extends TestBase {
                 .lastName("demir")
                 .biography("")
                 .phoneNumber("12345")
-                .created(new Date(Instant.now().toEpochMilli()))
                 .mail("kerim@gmail.com")
+                .password("pass")
                 .build();
 
         val url = TestBase.LOCALHOST.concat(String.valueOf(port))
                 .concat("/v1/user/save");
 
-        val response = restTemplate.postForEntity(url, new HttpEntity<>(userToPost), User.class);
+        val response = restTemplate.postForEntity
+                (url, new HttpEntity<>(userToPost), User.class);
+
         assertTrue(StringUtils.isNotBlank(response.toString()));
         assertNotNull(response.getBody());
 
@@ -157,7 +160,6 @@ public class UserControllerIntegrationTests extends TestBase {
                 .lastName("demir")
                 .biography("")
                 .phoneNumber("12345")
-                .created(new Date(Instant.now().toEpochMilli()))
                 .mail("kerim@gmail.com")
                 .build();
         val url = TestBase.LOCALHOST.concat(String.valueOf(port))
@@ -192,7 +194,7 @@ public class UserControllerIntegrationTests extends TestBase {
         try {
             restTemplate.exchange(url, HttpMethod.DELETE, null, User.class);
         } catch(final HttpClientErrorException e) {
-            assertThat(e.getMessage(), containsString("400"));
+            assertThat(e.getMessage(), containsString("404"));
         }
     }
 
@@ -206,13 +208,13 @@ public class UserControllerIntegrationTests extends TestBase {
                 .lastName("demir")
                 .biography("")
                 .phoneNumber("12345")
-                .created(new Date(Instant.now().toEpochMilli()))
+                .password("pass")
                 .mail("kerim@gmail.com")
                 .build();
         val url = TestBase.LOCALHOST.concat(String.valueOf(port))
-                .concat("/v1/user/save");
-        val response = restTemplate.exchange(url, HttpMethod.POST,
-                new HttpEntity<>(userToUpdate), User.class);
+                .concat("/v1/user/update");
+        val response = restTemplate.postForEntity
+                (url, new HttpEntity<>(userToUpdate), User.class);
 
         assertTrue(StringUtils.isNotBlank(response.toString()));
         assertNotNull(response.getBody());
@@ -288,7 +290,6 @@ public class UserControllerIntegrationTests extends TestBase {
                 .concat("/v1/user/find_all_like_last_name/")
                 .concat("L");
         try {
-
             restTemplate.exchange(url, HttpMethod.GET,
                 null, new ParameterizedTypeReference<PagedData<User>>() {
                 });
@@ -303,16 +304,24 @@ public class UserControllerIntegrationTests extends TestBase {
         insertNewUser2();
 
         val url = TestBase.LOCALHOST.concat(String.valueOf(port))
-                .concat("/v1/user/find_all_like_first_and_last_name/F/L");
+                .concat("/v1/user/find_all_like_first_name_and_last_name/F/L");
+        
+        testPagedDataResponse(restTemplate.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<PagedData<User>>() {
+                }).getBody());
     }
 
-    @Test(expected = ResponseStatusException.class)
+    @Test
     public void find_all_like_first_and_last_name_with_exception_test() {
-        insertNewUser();
-        insertNewUser2();
-
-        testCollection(userService.findAllByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase
-                ("B", "B", 0, 10, "id", SortDirection.Ascending));
+        val url = TestBase.LOCALHOST.concat(String.valueOf(port))
+                .concat("/v1/user/find_all_like_first_and_last_name/F/L");
+        try {
+            restTemplate.exchange(url, HttpMethod.GET,
+                    null, new ParameterizedTypeReference<PagedData<User>>() {
+                    });
+        } catch (final HttpClientErrorException e) {
+            assertThat(e.getMessage(), containsString("404"));
+        }
     }
 
     @Test
@@ -320,17 +329,25 @@ public class UserControllerIntegrationTests extends TestBase {
         insertNewUser();
         insertNewUser2();
 
-        testCollection(userService.findAllByMailContainingIgnoreCase
-                ("@gmail.com", 0, 10, "id", SortDirection.Ascending));
+        val url = TestBase.LOCALHOST.concat(String.valueOf(port))
+                .concat("/v1/user/find_all_like_mail/@gmail.com");
+
+        testPagedDataResponse(restTemplate.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<PagedData<User>>() {
+                }).getBody());
     }
 
-    @Test(expected = ResponseStatusException.class)
+    @Test
     public void find_all_like_mail_with_exception_test() {
-        insertNewUser();
-        insertNewUser2();
-
-        testCollection(userService.findAllByMailContainingIgnoreCase
-                ("@hotmail.com", 0, 10, "id", SortDirection.Ascending));
+        val url = TestBase.LOCALHOST.concat(String.valueOf(port))
+                .concat("/v1/user/find_all_like_mail/@gmail.com");
+        try {
+            restTemplate.exchange(url, HttpMethod.GET,
+                    null, new ParameterizedTypeReference<PagedData<User>>() {
+                    });
+        } catch (final HttpClientErrorException e) {
+            assertThat(e.getMessage(), containsString("404"));
+        }
     }
 
     @Test
@@ -338,16 +355,24 @@ public class UserControllerIntegrationTests extends TestBase {
         insertNewUser();
         insertNewUser2();
 
-        testCollection(userService.findAllByPhoneNumberContaining
-                ("123", 0, 10, "id", SortDirection.Ascending));
+        val url = TestBase.LOCALHOST.concat(String.valueOf(port))
+                .concat("/v1/user/find_all_like_phone_number/123");
+
+        testPagedDataResponse(restTemplate.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<PagedData<User>>() {
+                }).getBody());
     }
 
-    @Test(expected = ResponseStatusException.class)
+    @Test
     public void find_all_like_phone_number_with_exception_test() {
-        insertNewUser();
-        insertNewUser2();
-
-        testCollection(userService.findAllByPhoneNumberContaining
-                ("000", 0, 10, "id", SortDirection.Ascending));
+        val url = TestBase.LOCALHOST.concat(String.valueOf(port))
+                .concat("/v1/user/find_all_like_phone_number/123");
+        try {
+            restTemplate.exchange(url, HttpMethod.GET,
+                    null, new ParameterizedTypeReference<PagedData<User>>() {
+                    });
+        } catch (final HttpClientErrorException e) {
+            assertThat(e.getMessage(), containsString("404"));
+        }
     }
 }
