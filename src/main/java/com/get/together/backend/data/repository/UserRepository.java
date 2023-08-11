@@ -14,6 +14,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserModel, In
     Boolean existsByMail(String mail);
     Page<UserModel> findAllByUserNameContainingIgnoreCase
             (String userName, Pageable pageable);
+    UserModel findByUserName(String userName);
     Page<UserModel> findAllByFirstNameContainingIgnoreCase
             (String firstName, Pageable pageable);
     Page<UserModel> findAllByLastNameContainingIgnoreCase

@@ -74,6 +74,15 @@ public class UserController {
         return ResponseEntity.ok(mapPagedData(response));
     }
 
+    @RequestMapping(value = "/v1/user/find_by_user_name/{userName}", method = RequestMethod.GET)
+    private ResponseEntity<User> getUserByUserNameV1(@PathVariable String userName) {
+        log.info("Calling: getUserByUserNameV1 >> ".concat(userName));
+
+        val response = userService.findByUserName(userName);
+
+        return ResponseEntity.ok(mapUser(response));
+    }
+
     @RequestMapping(value = "/v1/user/find_all_like_last_name/{lastName}", method = RequestMethod.GET)
     private ResponseEntity<PagedData<User>> getUserLikeLastNameV1
             (@PathVariable String lastName,

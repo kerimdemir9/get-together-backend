@@ -6,6 +6,7 @@ import com.get.together.backend.data.repository.UserRepository;
 import com.get.together.backend.data.util.GenericPagedModel;
 import com.get.together.backend.util.SortDirection;
 import com.get.together.backend.data.validator.UserValidator;
+import lombok.Data;
 import lombok.val;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,6 +169,18 @@ public class UserService {
                     .totalPages(result.getTotalPages())
                     .content(result.getContent())
                     .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public UserModel findByUserName(String userName) {
+        try {
+            val result = userRepository.findByUserName(userName);
+            if (Objects.isNull(result)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with this userName: ".concat(userName));
+            }
+            return result;
         } catch (final DataIntegrityViolationException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
         }
