@@ -1,5 +1,6 @@
 package com.get.together.backend.data.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,8 +42,13 @@ public class UserModel {
 
     String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
     @JsonManagedReference
     @ToString.Exclude
-    Collection<EventModel> events;
+    Collection<EventModel> hostedEvents;
+
+    @ManyToMany(mappedBy = "attendees")
+    @JsonManagedReference
+    @ToString.Exclude
+    Collection<EventModel> attendedEvents;
 }

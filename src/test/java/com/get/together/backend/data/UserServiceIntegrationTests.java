@@ -5,14 +5,14 @@ import com.get.together.backend.TestBase;
 import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.util.GenericPagedModel;
 import com.get.together.backend.util.SortDirection;
+import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Instant;
 import java.util.Date;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class UserServiceIntegrationTests extends TestBase {
 
@@ -70,5 +70,41 @@ public class UserServiceIntegrationTests extends TestBase {
 
         testCollection(userService.findAllByUserNameContainingIgnoreCase
                 ("uSer", 0, 10, "id", SortDirection.Ascending));
+    }
+
+    @Test
+    public void insert_new_user_test() {
+        insertNewUser();
+
+        assertNotNull(newUser);
+        assertEquals("user1", newUser.getUserName());
+    }
+
+    @Test
+    public void delete_user_test() {
+        insertNewUser();
+        val deleted = userService.hardDelete(newUser.getId());
+
+        assertEquals(deleted.getId(), newUser.getId());
+        assertEquals(deleted.getUserName(), newUser.getUserName());
+    }
+
+    @Test
+    public void update_user_test() {
+        insertNewUser();
+
+        val updated = userService.save(UserModel.builder()
+                .id(newUser.getId())
+                .userName("kerim")
+                .firstName(newUser.getFirstName())
+                .lastName(newUser.getLastName())
+                .password(newUser.getPassword())
+                .biography(newUser.getBiography())
+                .phoneNumber(newUser.getPhoneNumber())
+                .created(newUser.getCreated())
+                .mail(newUser.getMail())
+                .build());
+        assertEquals(updated.getUserName(), "kerim");
+        assertEquals(updated.getId(), newUser.getId());
     }
 }

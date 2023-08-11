@@ -1,10 +1,12 @@
 package com.get.together.backend.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jdk.jfr.Frequency;
 import lombok.*;
 
+import java.util.Collection;
 import java.util.Date;
 
 @Getter
@@ -35,5 +37,9 @@ public class EventModel {
 
     @ManyToOne
     @JsonBackReference
-    UserModel user;
+    UserModel host;
+
+    @ManyToMany
+    @JsonBackReference
+    Collection<UserModel> attendees;
 }

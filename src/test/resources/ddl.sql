@@ -8,6 +8,7 @@ use get_together;
 
 drop table if exists user;
 drop table if exists event;
+drop table if exists event_attendees;
 
 CREATE TABLE user (
                       id              INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -33,4 +34,14 @@ CREATE TABLE event (
                        is_active       BOOLEAN         NOT NULL DEFAULT TRUE,
                        FOREIGN KEY (user_id) REFERENCES user (id)
                            ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE event_attendees (
+                                 event_id        INT NOT NULL,
+                                 user_id         INT NOT NULL,
+                                 PRIMARY KEY (event_id, user_id),
+                                 FOREIGN KEY (event_id) REFERENCES event (id)
+                                     ON DELETE CASCADE ON UPDATE CASCADE,
+                                 FOREIGN KEY (user_id) REFERENCES user (id)
+                                     ON DELETE CASCADE ON UPDATE CASCADE
 );
