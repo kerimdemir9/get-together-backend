@@ -154,6 +154,15 @@ public class UserController {
         return ResponseEntity.ok(mapUser(response));
     }
 
+    @RequestMapping(value = "/v1/user/delete/{userId}", method = RequestMethod.DELETE)
+    private ResponseEntity<User> deleteUserV1(@PathVariable Integer userId) {
+        log.info("Calling: deleteUserV1 >> ".concat(userId.toString()));
+
+        val response = userService.hardDelete(userId);
+
+        return ResponseEntity.ok(mapUser(response));
+    }
+
     private PagedData<User> mapPagedData(GenericPagedModel<UserModel> model) {
         return PagedData.<User>builder()
                 .totalElements(model.getTotalElements())
