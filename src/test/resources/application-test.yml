@@ -1,6 +1,4 @@
 spring:
-  datasource:
-    initialize-mode: always
   sql:
     init:
       mode: always

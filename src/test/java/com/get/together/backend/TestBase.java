@@ -16,6 +16,10 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 
 @SuppressWarnings("rawtypes")
 @DirtiesContext
@@ -39,12 +43,11 @@ public abstract class TestBase {
     @Autowired
     public UserService userService;
 
-
     static {
         container = new MySQLContainer<>(IMAGE_VERSION)
                 .withUsername("test_user")
                 .withPassword("test_password")
-                //.withInitScript("ddl.sql")
+                .withInitScript("ddl.sql")
                 .withDatabaseName("get_together");
         container.start();
     }
