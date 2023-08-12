@@ -33,6 +33,7 @@ public class EventModel {
 
     Date created;
 
+    @Column(name = "is_active")
     Boolean isActive;
 
     @ManyToOne

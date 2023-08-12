@@ -42,12 +42,12 @@ public class UserModel {
 
     String password;
 
-    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     @ToString.Exclude
     Collection<EventModel> hostedEvents;
 
-    @ManyToMany(mappedBy = "attendees")
+    @ManyToMany(mappedBy = "user")
     @JsonManagedReference
     @ToString.Exclude
     Collection<EventModel> attendedEvents;

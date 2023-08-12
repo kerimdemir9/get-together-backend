@@ -35,8 +35,8 @@ public class UserService {
     public UserModel findById(Integer id) {
         try {
             if (Objects.isNull(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "userId must not be null");
-        }
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "userId must not be null");
+            }
             val result = userRepository.findById(id);
             if (Objects.isNull(result)) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id: ".concat(id.toString()));
@@ -191,15 +191,20 @@ public class UserService {
             userValidator.validate(userModel);
             val userName = userRepository.existsByUserName(userModel.getUserName());
             val mail = userRepository.existsByMail(userModel.getMail());
-            if(Objects.isNull(userModel.getId()) && (userName || mail)) {
-                String message = "";
+            val phoneNumber = userRepository.existsByPhoneNumber(userModel.getPhoneNumber());
+            if(Objects.isNull(userModel.getId()) && (userName || mail || phoneNumber)) {
                 if(userName) {
-                    message = "UserName: ".concat(userModel.getUserName()).concat(" already in use");
+                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+                            "UserName: ".concat(userModel.getUserName()).concat(" already in use"));
                 }
                 else if (mail) {
-                    message = "Mail: ".concat(userModel.getMail()).concat(" already in use");
+                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+                            "Mail: ".concat(userModel.getMail()).concat(" already in use"));
                 }
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, message);
+                else {
+                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+                            "PhoneNumber: ".concat(userModel.getPhoneNumber()).concat(" already in use"));
+                }
             }
             return userRepository.save(userModel);
         } catch (final DataIntegrityViolationException ex) {

@@ -4,6 +4,8 @@ package com.get.together.backend.validation.helper;
 import com.get.together.backend.validation.SimpleValidation;
 import com.get.together.backend.validation.Validation;
 
+import java.util.Objects;
+
 import static java.lang.String.format;
 
 public class IntegerValidationHelpers {
@@ -19,4 +21,7 @@ public class IntegerValidationHelpers {
     public static Validation<Integer> intBetween(int min, int max) {
         return greaterThan(min).and(lowerThan(max));
     }
+
+    public static Validation<Integer> notNullInteger = SimpleValidation.from(Objects::nonNull, "must not be null.");
+
 }
