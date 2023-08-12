@@ -65,7 +65,7 @@ public class EventService {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event with header: ".concat(header)
                         .concat(" active: ".concat(isActive.toString())
                                 .concat(" createdBefore: ".concat(createdBefore.toString())
-                                .concat(" | createdAfter: ".concat(createdAfter.toString())))));
+                                        .concat(" | createdAfter: ".concat(createdAfter.toString())))));
             }
 
             return GenericPagedModel.<EventModel>builder()
@@ -118,8 +118,8 @@ public class EventService {
                     (header, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event with header: ".concat(header)
-                                .concat(" createdBefore: ".concat(createdBefore.toString())
-                                        .concat(" | createdAfter: ".concat(createdAfter.toString()))));
+                        .concat(" createdBefore: ".concat(createdBefore.toString())
+                                .concat(" | createdAfter: ".concat(createdAfter.toString()))));
             }
 
             return GenericPagedModel.<EventModel>builder()
@@ -172,6 +172,87 @@ public class EventService {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event with isActive: ".concat(isActive.toString())
                         .concat(" createdBefore: ".concat(createdBefore.toString())
                                 .concat(" | createdAfter: ".concat(createdAfter.toString()))));
+            }
+
+            return GenericPagedModel.<EventModel>builder()
+                    .totalElements(result.getTotalElements())
+                    .numberOfElements(result.getNumberOfElements())
+                    .totalPages(result.getTotalPages())
+                    .content(result.getContent())
+                    .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public GenericPagedModel<EventModel> findAllByCreatedBeforeAndCreatedAfter
+            (Date createdBefore, Date createdAfter,
+             int page, int size, String sortBy, SortDirection sortDirection) {
+        try {
+            val result = sortDirection.equals(SortDirection.Ascending)
+                    ? eventRepository.findAllByCreatedBeforeAndCreatedAfter
+                    (createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : eventRepository.findAllByCreatedBeforeAndCreatedAfter
+                    (createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+            if (result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event createdBefore: "
+                        .concat(createdBefore.toString())
+                        .concat(" | createdAfter: ".concat(createdAfter.toString())));
+            }
+
+            return GenericPagedModel.<EventModel>builder()
+                    .totalElements(result.getTotalElements())
+                    .numberOfElements(result.getNumberOfElements())
+                    .totalPages(result.getTotalPages())
+                    .content(result.getContent())
+                    .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public GenericPagedModel<EventModel> findAllByCapacityBetween(
+            Integer min, Integer max,
+            int page, int size, String sortBy, SortDirection sortDirection) {
+        try {
+            val result = sortDirection.equals(SortDirection.Ascending)
+                    ? eventRepository.findAllByCapacityBetween
+                    (min,max, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : eventRepository.findAllByCapacityBetween
+                    (min, max, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+            if (result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event capacity between: "
+                        .concat(min.toString()).concat(" and ").concat(max.toString()));
+            }
+
+            return GenericPagedModel.<EventModel>builder()
+                    .totalElements(result.getTotalElements())
+                    .numberOfElements(result.getNumberOfElements())
+                    .totalPages(result.getTotalPages())
+                    .content(result.getContent())
+                    .build();
+        } catch (final DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public GenericPagedModel<EventModel> findAllByCapacityBetween(
+            Integer capacityMin, Integer capacityMax,
+            Integer attendingMin, Integer attendingMax,
+            int page, int size, String sortBy, SortDirection sortDirection) {
+        try {
+            val result = sortDirection.equals(SortDirection.Ascending)
+                    ? eventRepository.findAllByCapacityBetweenAndAttendingBetween
+                    (capacityMin,capacityMax, attendingMin, attendingMax,
+                            PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : eventRepository.findAllByCapacityBetweenAndAttendingBetween
+                    (capacityMin,capacityMax, attendingMin, attendingMax,
+                            PageRequest.of(page, size, Sort.by(sortBy).descending()));
+            if (result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event capacity between: "
+                        .concat(capacityMin.toString()).concat(" | ").concat(capacityMax.toString())
+                        .concat(" and attending between: ".concat(attendingMin.toString())
+                                .concat(" | ").concat(attendingMax.toString())));
             }
 
             return GenericPagedModel.<EventModel>builder()
