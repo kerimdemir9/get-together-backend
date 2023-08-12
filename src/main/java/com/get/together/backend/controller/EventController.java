@@ -45,7 +45,7 @@ public class EventController {
         return ResponseEntity.ok(mapEvent(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_like_header_and_active_and_created_before_and_after/{header}&{active}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_like_header_and_active_and_created_before_and_after/{header}/{active}", method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> getEventLikeHeaderAndActiveAndCreatedBeforeAndAfterV1
             (@PathVariable String header,
              @PathVariable String active,
@@ -149,7 +149,7 @@ public class EventController {
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_by_capacity_between/{min}&{max}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_by_capacity_between/{min}/{max}", method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> findAllByCapacityBetweenV1
             (@PathVariable String min,
              @PathVariable String max,
@@ -167,7 +167,7 @@ public class EventController {
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_by_capacity_between_and_attending_between/{capacityMin}&{capacityMax}&{attendingMin}&{attendingMax}",
+    @RequestMapping(value = "/v1/event/find_all_by_capacity_between_and_attending_between/{capacityMin}/{capacityMax}/{attendingMin}/{attendingMax}",
             method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> findAllByCapacityBetweenAndAttendingBetweenV1
             (@PathVariable String capacityMin,
@@ -192,7 +192,7 @@ public class EventController {
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_like_description_and_active_and_created_before_and_after/{description}&{active}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_like_description_and_active_and_created_before_and_after/{description}/{active}", method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> getEventLikeDescriptionAndActiveAndCreatedBeforeAndAfterV1
             (@PathVariable String description,
              @PathVariable String active,

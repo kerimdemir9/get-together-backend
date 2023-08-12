@@ -3,6 +3,7 @@ package com.get.together.backend.data.service;
 import com.get.together.backend.data.model.EventModel;
 import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.repository.EventRepository;
+import com.get.together.backend.data.repository.UserRepository;
 import com.get.together.backend.data.util.GenericPagedModel;
 import com.get.together.backend.data.validator.EventValidator;
 import com.get.together.backend.util.SortDirection;
@@ -24,11 +25,13 @@ import java.util.Objects;
 public class EventService {
 
     final EventRepository eventRepository;
+    final UserRepository userRepository;
     final EventValidator eventValidator;
 
     @Autowired
-    public EventService(EventRepository eventRepository, EventValidator eventValidator) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository, EventValidator eventValidator) {
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
         this.eventValidator = eventValidator;
     }
 
@@ -271,6 +274,23 @@ public class EventService {
             return result.getAttendees().stream().toList();
         } catch (final DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ExceptionUtils.getStackTrace(e));
+        }
+    }
+
+    public List<UserModel> addAttendee(Integer eventId, Integer userId) {
+        try {
+            val event = eventRepository.findById(eventId);
+            val user = userRepository.findById(userId);
+            if (!Objects.isNull(user) && !Objects.isNull(event)) {
+                event.getAttendees().add(user);
+                eventRepository.save(event);
+                return event.getAttendees().stream().toList();
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user or event not found");
+            }
+        } catch (final DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(e));
         }
     }
 

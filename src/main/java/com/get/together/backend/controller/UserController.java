@@ -129,13 +129,25 @@ public class UserController {
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_attendees/{id}", method = RequestMethod.GET)
-    private ResponseEntity<Collection<User>> getAttendeesV1(@PathVariable Integer id) {
+    @RequestMapping(value = "/v1/event/get_event_attendees/{id}", method = RequestMethod.GET)
+    private ResponseEntity<List<User>> getAttendeesV1(@PathVariable Integer id) {
         log.info("Calling: getAttendeesV1 >> eventId".concat(id.toString()));
 
         val response = eventService.getAttendees(id);
 
-        return ResponseEntity.ok(mapUsers(response));
+        return ResponseEntity.ok(mapUsers(response).stream().toList());
+    }
+
+    @RequestMapping(value = "/v1/event/add_user_to_event_attendees/{eventId}/{userId}", method = RequestMethod.GET)
+    private ResponseEntity<List<User>> addUserToEventV1
+            (@PathVariable Integer eventId,
+             @PathVariable Integer userId) {
+        log.info("Calling: addUserToEventV1 >> eventId".concat(eventId.toString())
+                .concat(" userId: ").concat(userId.toString()));
+
+        val response = eventService.addAttendee(eventId, userId);
+
+        return ResponseEntity.ok(mapUsers(response).stream().toList());
     }
 
     @RequestMapping(value = "/v1/user/find_all_like_phone_number/{phoneNumber}", method = RequestMethod.GET)
