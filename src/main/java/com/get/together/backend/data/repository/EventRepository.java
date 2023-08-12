@@ -14,13 +14,13 @@ import java.util.Date;
 public interface EventRepository extends PagingAndSortingRepository<EventModel, Integer> {
     EventModel findById(Integer id);
 
-    Page<EventModel> findAllByHeaderAndIsActiveAndCreatedBeforeAndCreatedAfter
+    Page<EventModel> findAllByHeaderContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
             (String header, Boolean isActive, Date createdBefore, Date createdAfter, Pageable pageable);
-    Page<EventModel> findAllByHeaderAndCreatedBeforeAndCreatedAfter
+    Page<EventModel> findAllByHeaderContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
             (String header, Date createdBefore, Date createdAfter, Pageable pageable);
-    Page<EventModel> findAllByDescriptionAndIsActiveAndCreatedBeforeAndCreatedAfter
+    Page<EventModel> findAllByDescriptionContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
             (String description, Boolean isActive, Date createdBefore, Date createdAfter, Pageable pageable);
-    Page<EventModel> findAllByDescriptionAndCreatedBeforeAndCreatedAfter
+    Page<EventModel> findAllByDescriptionContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
             (String description, Date createdBefore, Date createdAfter, Pageable pageable);
     Page<EventModel> findAllByIsActiveAndCreatedBeforeAndCreatedAfter
             (Boolean isActive, Date createdBefore, Date createdAfter, Pageable pageable);

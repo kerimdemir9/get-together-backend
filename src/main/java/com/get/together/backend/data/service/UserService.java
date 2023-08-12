@@ -191,19 +191,14 @@ public class UserService {
             userValidator.validate(userModel);
             val userName = userRepository.existsByUserName(userModel.getUserName());
             val mail = userRepository.existsByMail(userModel.getMail());
-            val phoneNumber = userRepository.existsByPhoneNumber(userModel.getPhoneNumber());
-            if(Objects.isNull(userModel.getId()) && (userName || mail || phoneNumber)) {
+            if(Objects.isNull(userModel.getId()) && (userName || mail)) {
                 if(userName) {
                     throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
                             "UserName: ".concat(userModel.getUserName()).concat(" already in use"));
                 }
-                else if (mail) {
-                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
-                            "Mail: ".concat(userModel.getMail()).concat(" already in use"));
-                }
                 else {
                     throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
-                            "PhoneNumber: ".concat(userModel.getPhoneNumber()).concat(" already in use"));
+                            "Mail: ".concat(userModel.getMail()).concat(" already in use"));
                 }
             }
             return userRepository.save(userModel);

@@ -1,7 +1,6 @@
 package com.get.together.backend.data.service;
 
 import com.get.together.backend.data.model.EventModel;
-import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.repository.EventRepository;
 import com.get.together.backend.data.util.GenericPagedModel;
 import com.get.together.backend.data.validator.EventValidator;
@@ -10,9 +9,7 @@ import lombok.val;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -51,15 +48,15 @@ public class EventService {
         }
     }
 
-    public GenericPagedModel<EventModel> findAllByHeaderAndIsActiveAndCreatedBeforeAndCreatedAfter
+    public GenericPagedModel<EventModel> findAllByHeaderContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
             (String header, Boolean isActive,
              Date createdBefore, Date createdAfter,
              int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? eventRepository.findAllByHeaderAndIsActiveAndCreatedBeforeAndCreatedAfter
+                    ? eventRepository.findAllByHeaderContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
                     (header, isActive, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : eventRepository.findAllByHeaderAndIsActiveAndCreatedBeforeAndCreatedAfter
+                    : eventRepository.findAllByHeaderContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
                     (header, isActive, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event with header: ".concat(header)
@@ -79,15 +76,15 @@ public class EventService {
         }
     }
 
-    public GenericPagedModel<EventModel> findAllByDescriptionAndIsActiveAndCreatedBeforeAndCreatedAfter
+    public GenericPagedModel<EventModel> findAllByDescriptionContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
             (String description, Boolean isActive,
              Date createdBefore, Date createdAfter,
              int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? eventRepository.findAllByDescriptionAndIsActiveAndCreatedBeforeAndCreatedAfter
+                    ? eventRepository.findAllByDescriptionContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
                     (description, isActive, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : eventRepository.findAllByDescriptionAndIsActiveAndCreatedBeforeAndCreatedAfter
+                    : eventRepository.findAllByDescriptionContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
                     (description, isActive, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event with description: ".concat(description)
@@ -107,14 +104,14 @@ public class EventService {
         }
     }
 
-    public GenericPagedModel<EventModel> findAllByHeaderAndCreatedBeforeAndCreatedAfter
+    public GenericPagedModel<EventModel> findAllByHeaderContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
             (String header, Date createdBefore, Date createdAfter,
              int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? eventRepository.findAllByHeaderAndCreatedBeforeAndCreatedAfter
+                    ? eventRepository.findAllByHeaderContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
                     (header, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : eventRepository.findAllByHeaderAndCreatedBeforeAndCreatedAfter
+                    : eventRepository.findAllByHeaderContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
                     (header, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event with header: ".concat(header)
@@ -133,14 +130,14 @@ public class EventService {
         }
     }
 
-    public GenericPagedModel<EventModel> findAllByDescriptionAndCreatedBeforeAndCreatedAfter
+    public GenericPagedModel<EventModel> findAllByDescriptionContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
             (String description, Date createdBefore, Date createdAfter,
              int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? eventRepository.findAllByDescriptionAndCreatedBeforeAndCreatedAfter
+                    ? eventRepository.findAllByDescriptionContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
                     (description, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : eventRepository.findAllByDescriptionAndCreatedBeforeAndCreatedAfter
+                    : eventRepository.findAllByDescriptionContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
                     (description, createdBefore, createdAfter, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No event with description: ".concat(description)
