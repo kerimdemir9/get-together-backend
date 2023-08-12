@@ -1,6 +1,7 @@
 package com.get.together.backend.data.service;
 
 import com.get.together.backend.data.model.EventModel;
+import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.repository.EventRepository;
 import com.get.together.backend.data.util.GenericPagedModel;
 import com.get.together.backend.data.validator.EventValidator;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -233,7 +235,7 @@ public class EventService {
         }
     }
 
-    public GenericPagedModel<EventModel> findAllByCapacityBetween(
+    public GenericPagedModel<EventModel> findAllByCapacityBetweenAndAttendingBetween(
             Integer capacityMin, Integer capacityMax,
             Integer attendingMin, Integer attendingMax,
             int page, int size, String sortBy, SortDirection sortDirection) {
@@ -260,6 +262,15 @@ public class EventService {
                     .build();
         } catch (final DataIntegrityViolationException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    public List<UserModel> getAttendees(Integer id) {
+        try {
+            val result = eventRepository.findById(id);
+            return result.getAttendees().stream().toList();
+        } catch (final DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ExceptionUtils.getStackTrace(e));
         }
     }
 

@@ -3,6 +3,7 @@ package com.get.together.backend.controller;
 import com.get.together.backend.controller.model.PagedData;
 import com.get.together.backend.controller.model.User;
 import com.get.together.backend.data.model.UserModel;
+import com.get.together.backend.data.service.EventService;
 import com.get.together.backend.data.service.UserService;
 import com.get.together.backend.data.util.GenericPagedModel;
 import com.get.together.backend.util.CryptographyUtil;
@@ -10,15 +11,12 @@ import com.get.together.backend.util.SortDirection;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 import static com.get.together.backend.controller.util.Parsers.tryParseInteger;
 
@@ -27,11 +25,13 @@ import static com.get.together.backend.controller.util.Parsers.tryParseInteger;
 public class UserController {
 
     final UserService userService;
+    final EventService eventService;
     final CryptographyUtil cryptographyUtil;
 
     @Autowired
-    public UserController(UserService userService, CryptographyUtil cryptographyUtil) {
+    public UserController(UserService userService, EventService eventService, CryptographyUtil cryptographyUtil) {
         this.userService = userService;
+        this.eventService = eventService;
         this.cryptographyUtil = cryptographyUtil;
     }
 
@@ -127,6 +127,15 @@ public class UserController {
                 (mail, pageNo, pageSize, sortBy, SortDirection.of(sortDir));
 
         return ResponseEntity.ok(mapPagedData(response));
+    }
+
+    @RequestMapping(value = "/v1/event/find_attendees/{id}", method = RequestMethod.GET)
+    private ResponseEntity<Collection<User>> getAttendeesV1(@PathVariable Integer id) {
+        log.info("Calling: getAttendeesV1 >> eventId".concat(id.toString()));
+
+        val response = eventService.getAttendees(id);
+
+        return ResponseEntity.ok(mapUsers(response));
     }
 
     @RequestMapping(value = "/v1/user/find_all_like_phone_number/{phoneNumber}", method = RequestMethod.GET)

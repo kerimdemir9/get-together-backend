@@ -2,6 +2,7 @@ package com.get.together.backend.controller.model;
 
 import lombok.*;
 
+import java.util.Collection;
 import java.util.Date;
 @Getter
 @Setter
@@ -17,4 +18,6 @@ public class Event {
     Integer attending;
     Date created;
     Boolean isActive;
+    Integer hostId;
+    Collection<User> attendees;
 }

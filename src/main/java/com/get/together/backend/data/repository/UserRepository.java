@@ -1,5 +1,6 @@
 package com.get.together.backend.data.repository;
 
+import com.get.together.backend.data.model.EventModel;
 import com.get.together.backend.data.model.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

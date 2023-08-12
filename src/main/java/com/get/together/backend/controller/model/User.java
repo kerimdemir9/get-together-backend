@@ -2,6 +2,7 @@ package com.get.together.backend.controller.model;
 
 import lombok.*;
 
+import java.util.Collection;
 import java.util.Date;
 
 @Getter
@@ -20,4 +21,6 @@ public class User {
     String mail;
     Date created;
     String password;
+    Collection<Integer> hosted;
+    Collection<Integer> attending;
 }

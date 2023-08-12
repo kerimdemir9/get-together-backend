@@ -41,6 +41,13 @@ public class EventModel {
     UserModel host;
 
     @ManyToMany
+    @JoinTable(
+            name = "user_event",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     @JsonBackReference
     Collection<UserModel> attendees;
+
+
 }
