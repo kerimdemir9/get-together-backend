@@ -2,9 +2,7 @@ package com.get.together.backend.controller;
 
 import com.get.together.backend.controller.model.Event;
 import com.get.together.backend.controller.model.PagedData;
-import com.get.together.backend.controller.model.User;
 import com.get.together.backend.data.model.EventModel;
-import com.get.together.backend.data.model.UserModel;
 import com.get.together.backend.data.service.EventService;
 import com.get.together.backend.data.service.UserService;
 import com.get.together.backend.data.util.GenericPagedModel;
@@ -22,8 +20,8 @@ import java.util.*;
 
 import static com.get.together.backend.controller.util.Parsers.*;
 
-@Controller
 @Slf4j
+@RestController
 public class EventController {
     final EventService eventService;
     final UserService userService;
@@ -45,7 +43,8 @@ public class EventController {
         return ResponseEntity.ok(mapEvent(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_like_header_and_active_and_created_before_and_after/{header}/{active}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_like_header_and_active_and_created_before_and_after/" +
+            "{header}/{active}", method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> getEventLikeHeaderAndActiveAndCreatedBeforeAndAfterV1
             (@PathVariable String header,
              @PathVariable String active,
@@ -57,16 +56,20 @@ public class EventController {
              @RequestParam(defaultValue = "asc") String sortDir) {
         log.info("Calling: getEventLikeHeaderAndActiveAndCreatedBeforeAndAfterV1 >> "
                 .concat("header: ").concat(header).concat(" active: ".concat(active))
-                .concat(" createdBefore: ").concat(createdBefore).concat(" | ".concat("createdAfter: ".concat(createdAfter))));
+                .concat(" createdBefore: ").concat(createdBefore)
+                .concat(" | ".concat("createdAfter: ".concat(createdAfter))));
 
         val response = eventService.findAllByHeaderContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
-                (header, tryParseBoolean(active, "active"), new Date(tryParseLong(createdBefore, "createdBefore")),
-                        new Date(tryParseLong(createdAfter, "createdAfter")), pageNo, pageSize, sortBy, SortDirection.of(sortDir));
+                (header, tryParseBoolean(active, "active"),
+                        new Date(tryParseLong(createdBefore, "createdBefore")),
+                        new Date(tryParseLong(createdAfter, "createdAfter")),
+                        pageNo, pageSize, sortBy, SortDirection.of(sortDir));
 
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_like_header_and_created_before_and_after/{header}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_like_header_and_created_before_and_after/{header}",
+            method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> getEventLikeHeaderAndCreatedBeforeAndAfterV1
             (@PathVariable String header,
              @RequestParam(defaultValue = "") String createdBefore,
@@ -87,7 +90,8 @@ public class EventController {
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_like_description_and_created_before_and_after/{description}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_like_description_and_created_before_and_after/{description}",
+            method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> findAllByDescriptionContainingIgnoreCaseAndCreatedBeforeAndCreatedAfter
             (@PathVariable String description,
              @RequestParam(defaultValue = "") String createdBefore,
@@ -108,7 +112,8 @@ public class EventController {
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_active_and_created_before_and_after/{active}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_active_and_created_before_and_after/{active}",
+            method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> findAllByIsActiveAndCreatedBeforeAndCreatedAfter
             (@PathVariable String active,
              @RequestParam(defaultValue = "") String createdBefore,
@@ -122,7 +127,8 @@ public class EventController {
                 .concat(" | ".concat("createdAfter: ".concat(createdAfter))));
 
         val response = eventService.findAllByIsActiveAndCreatedBeforeAndCreatedAfter
-                (tryParseBoolean(active, "active"), new Date(tryParseLong(createdBefore, "createdBefore")),
+                (tryParseBoolean(active, "active"),
+                        new Date(tryParseLong(createdBefore, "createdBefore")),
                         new Date(tryParseLong(createdAfter, "createdAfter")),
                         pageNo, pageSize, sortBy, SortDirection.of(sortDir));
 
@@ -162,13 +168,14 @@ public class EventController {
                 .concat(" | ".concat("max: ".concat(max))));
 
         val response = eventService.findAllByCapacityBetween
-                (tryParseInteger(min, "min"), tryParseInteger(max, "max"), pageNo, pageSize, sortBy, SortDirection.of(sortDir));
+                (tryParseInteger(min, "min"), tryParseInteger(max, "max"),
+                        pageNo, pageSize, sortBy, SortDirection.of(sortDir));
 
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_by_capacity_between_and_attending_between/{capacityMin}/{capacityMax}/{attendingMin}/{attendingMax}",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_by_capacity_between_and_attending_between/" +
+            "{capacityMin}/{capacityMax}/{attendingMin}/{attendingMax}", method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> findAllByCapacityBetweenAndAttendingBetweenV1
             (@PathVariable String capacityMin,
              @PathVariable String capacityMax,
@@ -185,14 +192,17 @@ public class EventController {
                         .concat(" | ").concat("attendingMax").concat(attendingMax)));
 
         val response = eventService.findAllByCapacityBetweenAndAttendingBetween
-                (tryParseInteger(capacityMin, "capacityMax"), tryParseInteger(capacityMax, "capacityMax"),
-                        tryParseInteger(attendingMin, "attendingMin"), tryParseInteger(attendingMax, "attendingMax"),
+                (tryParseInteger(capacityMin, "capacityMax"),
+                        tryParseInteger(capacityMax, "capacityMax"),
+                        tryParseInteger(attendingMin, "attendingMin"),
+                        tryParseInteger(attendingMax, "attendingMax"),
                         pageNo, pageSize, sortBy, SortDirection.of(sortDir));
 
         return ResponseEntity.ok(mapPagedData(response));
     }
 
-    @RequestMapping(value = "/v1/event/find_all_like_description_and_active_and_created_before_and_after/{description}/{active}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/event/find_all_like_description_and_active_and_created_before_and_after/" +
+            "{description}/{active}", method = RequestMethod.GET)
     private ResponseEntity<PagedData<Event>> getEventLikeDescriptionAndActiveAndCreatedBeforeAndAfterV1
             (@PathVariable String description,
              @PathVariable String active,
@@ -204,11 +214,14 @@ public class EventController {
              @RequestParam(defaultValue = "asc") String sortDir) {
         log.info("Calling: getEventLikeDescriptionAndActiveAndCreatedBeforeAndAfterV1 >> "
                 .concat("description: ").concat(description).concat(" active: ".concat(active))
-                .concat(" createdBefore: ").concat(createdBefore).concat(" | ".concat("createdAfter: ".concat(createdAfter))));
+                .concat(" createdBefore: ").concat(createdBefore)
+                .concat(" | ".concat("createdAfter: ".concat(createdAfter))));
 
         val response = eventService.findAllByDescriptionContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
-                (description, tryParseBoolean(active, "active"), new Date(tryParseLong(createdBefore, "createdBefore")),
-                        new Date(tryParseLong(createdAfter, "createdAfter")), pageNo, pageSize, sortBy, SortDirection.of(sortDir));
+                (description, tryParseBoolean(active, "active"),
+                        new Date(tryParseLong(createdBefore, "createdBefore")),
+                        new Date(tryParseLong(createdAfter, "createdAfter")),
+                        pageNo, pageSize, sortBy, SortDirection.of(sortDir));
 
         return ResponseEntity.ok(mapPagedData(response));
     }
@@ -226,7 +239,6 @@ public class EventController {
                 .capacity(event.getCapacity())
                 .description(event.getDescription())
                 .header(event.getHeader())
-                .created(new Date(Instant.now().toEpochMilli()))
                 .isActive(Objects.isNull(event.getIsActive()) || event.getIsActive())
                 .build());
 

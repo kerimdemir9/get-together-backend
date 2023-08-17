@@ -38,10 +38,10 @@ public class UserService {
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "userId must not be null");
             }
             val result = userRepository.findById(id);
-            if (Objects.isNull(result)) {
+            if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id: ".concat(id.toString()));
             }
-            return result;
+            return result.get();
         } catch (final DataIntegrityViolationException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));
         }
@@ -51,8 +51,10 @@ public class UserService {
             (String userName, int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? userRepository.findAllByUserNameContainingIgnoreCase(userName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : userRepository.findAllByUserNameContainingIgnoreCase(userName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+                    ? userRepository.findAllByUserNameContainingIgnoreCase
+                    (userName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByUserNameContainingIgnoreCase
+                    (userName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with userName: ".concat(userName));
             }
@@ -72,8 +74,10 @@ public class UserService {
             (String firstName, int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? userRepository.findAllByFirstNameContainingIgnoreCase(firstName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : userRepository.findAllByFirstNameContainingIgnoreCase(firstName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+                    ? userRepository.findAllByFirstNameContainingIgnoreCase
+                    (firstName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByFirstNameContainingIgnoreCase
+                    (firstName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with firstName: ".concat(firstName));
             }
@@ -93,8 +97,10 @@ public class UserService {
             (String lastName, int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? userRepository.findAllByLastNameContainingIgnoreCase(lastName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : userRepository.findAllByLastNameContainingIgnoreCase(lastName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+                    ? userRepository.findAllByLastNameContainingIgnoreCase
+                    (lastName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByLastNameContainingIgnoreCase
+                    (lastName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with lastName: ".concat(lastName));
             }
@@ -114,8 +120,10 @@ public class UserService {
             (String firstName, String lastName, int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? userRepository.findAllByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(firstName, lastName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : userRepository.findAllByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(firstName, lastName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+                    ? userRepository.findAllByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase
+                    (firstName, lastName, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase
+                    (firstName, lastName, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with firstName: ".concat(firstName)
                         .concat(" and lastName: ").concat(lastName));
@@ -136,8 +144,10 @@ public class UserService {
             (String mail, int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? userRepository.findAllByMailContainingIgnoreCase(mail, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : userRepository.findAllByMailContainingIgnoreCase(mail, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+                    ? userRepository.findAllByMailContainingIgnoreCase
+                    (mail, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByMailContainingIgnoreCase
+                    (mail, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with mail: ".concat(mail));
             }
@@ -157,8 +167,10 @@ public class UserService {
             (String phoneNumber, int page, int size, String sortBy, SortDirection sortDirection) {
         try {
             val result = sortDirection.equals(SortDirection.Ascending)
-                    ? userRepository.findAllByPhoneNumberContaining(phoneNumber, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
-                    : userRepository.findAllByPhoneNumberContaining(phoneNumber, PageRequest.of(page, size, Sort.by(sortBy).descending()));
+                    ? userRepository.findAllByPhoneNumberContaining
+                    (phoneNumber, PageRequest.of(page, size, Sort.by(sortBy).ascending()))
+                    : userRepository.findAllByPhoneNumberContaining
+                    (phoneNumber, PageRequest.of(page, size, Sort.by(sortBy).descending()));
             if (result.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with phoneNumber: ".concat(phoneNumber));
             }
@@ -201,6 +213,7 @@ public class UserService {
                             "Mail: ".concat(userModel.getMail()).concat(" already in use"));
                 }
             }
+            userModel.setCreated(new Date(Instant.now().toEpochMilli()));
             return userRepository.save(userModel);
         } catch (final DataIntegrityViolationException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(ex));

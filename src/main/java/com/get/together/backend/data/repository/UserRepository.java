@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 @Repository
 public interface UserRepository extends PagingAndSortingRepository<UserModel, Integer> {
-    UserModel findById(Integer id);
     Boolean existsByUserName(String userName);
     Boolean existsByPhoneNumber(String phoneNumber);
     Boolean existsByMail(String mail);
@@ -26,11 +25,4 @@ public interface UserRepository extends PagingAndSortingRepository<UserModel, In
     Page<UserModel> findAllByMailContainingIgnoreCase(String mail, Pageable pageable);
 
     Page<UserModel> findAllByPhoneNumberContaining(String phoneNUmber, Pageable pageable);
-
-    UserModel save(UserModel userModel);
-
-    void delete(UserModel user);
-
-    void deleteAll();
-
 }

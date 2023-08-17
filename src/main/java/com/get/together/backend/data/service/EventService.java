@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -42,11 +43,11 @@ public class EventService {
                         (HttpStatus.NOT_ACCEPTABLE, "eventId must not be null");
             }
             val result = eventRepository.findById(id);
-            if (Objects.isNull(result)) {
+            if (result.isEmpty()) {
                 throw new ResponseStatusException
                         (HttpStatus.NOT_FOUND, "No event with id: ".concat(id.toString()));
             }
-            return result;
+            return result.get();
         } catch (final DataIntegrityViolationException e) {
             throw new ResponseStatusException
                     (HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getStackTrace(e));
@@ -271,7 +272,10 @@ public class EventService {
     public List<UserModel> getAttendees(Integer id) {
         try {
             val result = eventRepository.findById(id);
-            return result.getAttendees().stream().toList();
+            if(result.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "event not found");
+            }
+            return result.get().getAttendees().stream().toList();
         } catch (final DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ExceptionUtils.getStackTrace(e));
         }
@@ -281,12 +285,11 @@ public class EventService {
         try {
             val event = eventRepository.findById(eventId);
             val user = userRepository.findById(userId);
-            if (!Objects.isNull(user) && !Objects.isNull(event)) {
-                event.getAttendees().add(user);
-                eventRepository.save(event);
-                return event.getAttendees().stream().toList();
-            }
-            else {
+            if (user.isPresent() && event.isPresent()) {
+                event.get().getAttendees().add(user.get());
+                eventRepository.save(event.get());
+                return event.get().getAttendees().stream().toList();
+            } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user or event not found");
             }
         } catch (final DataIntegrityViolationException e) {
@@ -297,6 +300,7 @@ public class EventService {
     public EventModel save(EventModel eventModel) {
         try {
             eventValidator.validate(eventModel);
+            eventModel.setCreated(new Date(Instant.now().toEpochMilli()));
             return eventRepository.save(eventModel);
         } catch (final DataIntegrityViolationException ex) {
             throw new ResponseStatusException

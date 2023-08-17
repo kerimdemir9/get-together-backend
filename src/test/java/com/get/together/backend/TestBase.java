@@ -1,5 +1,6 @@
 package com.get.together.backend;
 
+import com.get.together.backend.data.service.EventService;
 import com.get.together.backend.data.service.UserService;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
@@ -42,6 +43,9 @@ public abstract class TestBase {
 
     @Autowired
     public UserService userService;
+
+    @Autowired
+    public EventService eventService;
 
     static {
         container = new MySQLContainer<>(IMAGE_VERSION)

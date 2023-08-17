@@ -20,8 +20,8 @@ import java.util.*;
 
 import static com.get.together.backend.controller.util.Parsers.tryParseInteger;
 
-@Controller
 @Slf4j
+@RestController
 public class UserController {
 
     final UserService userService;
@@ -176,7 +176,6 @@ public class UserController {
                 .phoneNumber(user.getPhoneNumber())
                 .biography(user.getBiography())
                 .mail(user.getMail())
-                .created(new Date(Instant.now().toEpochMilli()))
                 .password(cryptographyUtil.encrypt(user.getPassword()))
                 .build());
 
@@ -195,7 +194,6 @@ public class UserController {
                 .phoneNumber(user.getPhoneNumber())
                 .biography(user.getBiography())
                 .mail(user.getMail())
-                .created(new Date(Instant.now().toEpochMilli()))
                 .password(cryptographyUtil.encrypt(user.getPassword()))
                 .build());
 

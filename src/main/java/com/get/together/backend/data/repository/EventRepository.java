@@ -13,7 +13,6 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends PagingAndSortingRepository<EventModel, Integer> {
-    EventModel findById(Integer id);
 
     Page<EventModel> findAllByHeaderContainingIgnoreCaseAndIsActiveAndCreatedBeforeAndCreatedAfter
             (String header, Boolean isActive, Date createdBefore, Date createdAfter, Pageable pageable);
@@ -30,9 +29,4 @@ public interface EventRepository extends PagingAndSortingRepository<EventModel, 
     Page<EventModel> findAllByCapacityBetween(Integer capacityMin, Integer capacityMax, Pageable pageable);
     Page<EventModel> findAllByCapacityBetweenAndAttendingBetween
             (Integer capacityMin, Integer capacityMax, Integer attendingMin, Integer attendingMax, Pageable pageable);
-    EventModel save(EventModel event);
-
-    void delete(EventModel event);
-
-    void deleteAll();
 }

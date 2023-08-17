@@ -1,11 +1,9 @@
 package com.get.together.backend.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import jdk.jfr.Frequency;
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 
