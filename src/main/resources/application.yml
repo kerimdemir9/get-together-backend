@@ -33,4 +33,3 @@ springdoc:
     path: /api-docs-ui
     supported-submit-methods: [ ]
 
-

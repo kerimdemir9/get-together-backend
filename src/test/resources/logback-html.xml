@@ -11,7 +11,7 @@
     </root>
 
     <logger name="org.testcontainers" level="INFO"/>
-    <logger name="com.github.docker-java" level="WARN"/>
+    <logger name="com.github.docker-java" level="INFO"/>
 
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="org.springframework" level="OFF"/>
