@@ -245,19 +245,11 @@ public class EventController {
         return ResponseEntity.ok(mapEvent(response));
     }
 
-    @RequestMapping(value = "/v1/event/update", method = RequestMethod.POST)
-    private ResponseEntity<Event> updateEventV1(@RequestBody Event event) {
-        log.info("Calling: updateEventV1 >> ".concat(event.toString()));
+    @RequestMapping(value = "/v1/event/delete/{id}", method = RequestMethod.DELETE)
+    private ResponseEntity<Event> deleteEventV1(@PathVariable String id) {
+        log.info("Calling: deleteEventV1 >> id: ".concat(id));
 
-        val response = eventService.save(EventModel.builder()
-                .id(event.getId())
-                .attending(event.getAttending())
-                .capacity(event.getCapacity())
-                .description(event.getDescription())
-                .header(event.getHeader())
-                .isActive(event.getIsActive())
-                .created(event.getCreated())
-                .build());
+        val response = eventService.hardDelete(tryParseInteger(id, "id"));
 
         return ResponseEntity.ok(mapEvent(response));
     }

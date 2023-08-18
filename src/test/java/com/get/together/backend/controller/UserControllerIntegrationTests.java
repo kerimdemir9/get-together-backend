@@ -4,18 +4,15 @@ import com.get.together.backend.TestBase;
 import com.get.together.backend.controller.model.PagedData;
 import com.get.together.backend.controller.model.User;
 import com.get.together.backend.data.model.UserModel;
-import com.get.together.backend.util.SortDirection;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.Date;

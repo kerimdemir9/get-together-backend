@@ -32,3 +32,5 @@ springdoc:
   swagger-ui:
     path: /api-docs-ui
     supported-submit-methods: [ ]
+
+
